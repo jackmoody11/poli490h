@@ -21,20 +21,26 @@ if __name__ == "__main__":
     # Define variables
     df = pd.read_csv('../data/example_arrests.csv', dtype={'CRRKCY': str})
     fields = pd.read_csv('../data/fields.csv', index_col='field')
-    offense_codes = pd.read_csv(
-        '../data/offense_codes_marijuana.csv')['offense_code'].tolist()
+    marijuana_offense_codes = pd.read_csv(
+        '../data/offense_codes_marijuana.csv')['code'].tolist()
+    cocaine_offense_codes = pd.read_csv(
+        '../data/offense_codes_cocaine.csv')['code'].tolist()
+    heroin_offense_codes = pd.read_csv(
+        '../data/offense_codes_heroin.csv')['code'].tolist()
     county_codes = pd.read_csv(
         '../data/county_codes.csv', dtype={'code': str}).set_index('code')['county'].to_dict()
 
-    # df = df[fields.index.tolist()]  # limit data frame to desired fields
+    df = df[fields.index.tolist()]  # limit data frame to desired fields
     df.rename(columns=fields['description'].to_dict(), inplace=True)
-    print(df)
+    df['County'] = df['County_Number'].map(county_codes)
 
-    # Limit to marijuana offenses
-    df = df[df['CROFFC'].isin(offense_codes)]
+    # Limit to different types of drug offenses
+    marijuana = df[df['CROFFC'].isin(marijuana_offense_codes)]
+    cocaine = df[df['CROFFC'].isin(cocaine_offense_codes)]
+    heroin = df[df['CROFFC'].isin(heroin_offense_codes)]
 
     # Replace . with NaN
-    df.replace({'.': np.nan}, inplace=True)
+    # df.replace({'.': np.nan}, inplace=True)
 
     # Fix DOB format
     # df['CRRDOB'] = df['CRRDOB'].apply(lambda x: fix_birthdays(x))
