@@ -27,7 +27,8 @@ def clean(df, fields, county_codes):
     # Calculate age at filing date
     df['Age'] = (df['Filing_Date'] -
                  df['Defendant_Date_of_Birth']).dt.days // 365
-    df[df['Age'] <= 0] = np.nan
+    df[df['Age'] <= 10] = np.nan
+    df[df['Age'] >= 90] = np.nan
 
     # Change probation length to all be in terms of days - number may be a few days off because of simplification
     # that month is 30 days and year is 365 days

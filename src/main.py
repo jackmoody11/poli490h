@@ -1,5 +1,6 @@
 from matplotlib.ticker import FuncFormatter
 import pandas as pd
+import geopandas as gpd
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ import sys
 from dateutil.relativedelta import relativedelta
 from analysis import analysis, create_figures
 from clean import clean
+from make_map import map_all
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -33,16 +35,19 @@ heroin_offense_codes = pd.read_csv(
     './data/offense_codes_heroin.csv')['code'].tolist()
 county_codes = pd.read_csv(
     './data/county_codes.csv', dtype={'code': str}).set_index('code')['county'].to_dict()
+nc_zip_codes = gpd.read_file('./data/map/nc_zip_codes.json')
 
-# Clean data frame
-df = clean(df, fields, county_codes)
+if __name__ == '__main':
+    # Clean data frame
+    df = clean(df, fields, county_codes)
 
-# Limit to different types of drug offenses
-marijuana = df[df['Charged_Offense_Code'].isin(marijuana_offense_codes)]
-cocaine = df[df['Charged_Offense_Code'].isin(cocaine_offense_codes)]
-heroin = df[df['Charged_Offense_Code'].isin(heroin_offense_codes)]
+    # Limit to different types of drug offenses
+    marijuana = df[df['Charged_Offense_Code'].isin(marijuana_offense_codes)]
+    cocaine = df[df['Charged_Offense_Code'].isin(cocaine_offense_codes)]
+    heroin = df[df['Charged_Offense_Code'].isin(heroin_offense_codes)]
 
-# Loop through analysis for each drug
-for drug_name, drug in {'marijuana': marijuana, 'cocaine': cocaine, 'heroin': heroin}.items():
-    analysis(drug)
-    create_figures(drug, drug_name)
+    # Loop through analysis for each drug
+    for drug_name, drug in {'marijuana': marijuana, 'cocaine': cocaine, 'heroin': heroin}.items():
+        analysis(drug)
+        create_figures(drug, drug_name)
+        map_all(drug, nc_zip_codes)

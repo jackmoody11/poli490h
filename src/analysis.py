@@ -74,9 +74,20 @@ def plot_race(df, drug_name):
 
 def plot_offense_codes(df, drug_name):
     plt.figure()
+    df['Charged_Offense_Code'] = df['Charged_Offense_Code'].dropna().astype(int)
     ax = df[['Charged_Offense_Code', 'File_Number_Sequence']
             ].drop_duplicates()['Charged_Offense_Code'].value_counts().plot.bar()
     ax.set_title('Offense Code Frequency: {0}'.format(drug_name))
     ax.set_ylabel('Count')
     plt.savefig(
         FIGURE_PATH + '/{0}/offense_code_distribution.png'.format(drug_name), bbox_inches='tight')
+
+
+def plot_offenses_v_age(df, drug_name):
+    plt.figure()
+    ax = df[df['Age'] < 100].groupby(['File_Number_Sequence', 'Age']).size().reset_index().\
+        rename(columns={0: 'File_Charges'}).drop_duplicates().groupby(
+            'Age')['File_Charges'].mean().plot(style='.')
+    ax.set_title('Number of Charges by Age')
+    ax.set_xlabel('Age')
+    ax.set_ylabel('Average Number of Charges')
