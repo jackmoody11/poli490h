@@ -1,0 +1,82 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+import os
+
+path = os.path.abspath(os.path.dirname(__file__))
+data_path = os.path.join(path, '/../data')
+DRUG_OUTPUT_FILES = {k: data_path + '/' +
+                     k for k in ['marijuana', 'cocaine', 'heroin']}
+FIGURE_PATH = os.path.abspath(
+    os.path.dirname(__file__)) + '/../figures'
+
+
+def analysis(drug):
+    drug_race_offense_code = drug.groupby(
+        ['Defendant_Race', 'Charged_Offense_Code']).count()['County'].unstack('Defendant_Race')
+    drug_offense_code_counts = drug_race_offense_code.T.sum()
+    drug_race_counts = drug_race_offense_code.sum()
+
+    drug_race_pct = drug_race_counts / drug_race_counts.sum()
+
+    drug['Probation_Frame'].replace(
+        {'Y': 365, 'M': 30, 'D': 1, '.': np.nan}, inplace=True)
+    drug['Probation_Length'].replace({'.': np.nan}, inplace=True)
+
+    drug.loc['Probation_Length'] = drug['Probation_Length'].replace({
+        '.': np.nan})
+    drug.loc['Probation_Length'] = drug['Probation_Length'].astype(float)
+
+    drug.loc['Probation_Length'] = drug['Probation_Length'] * \
+        drug['Probation_Frame']
+    drug_probation_length = drug['Probation_Length'].dropna()
+
+
+def create_figures(df, drug_name):
+    plot_probation_length(df, drug_name)
+    plot_age(df, drug_name)
+    plot_race(df, drug_name)
+    plot_offense_codes(df, drug_name)
+
+
+def plot_probation_length(df, drug_name):
+    plt.figure()
+    ax = df['Probation_Length'].dropna().plot.hist()
+    ax.set_title('Probation Length Distribution: {0}'.format(drug_name))
+    ax.set_ylabel('Count')
+    ax.set_xlabel('Probation Length (Days)')
+    plt.savefig(
+        FIGURE_PATH + '/{0}/probation_length.png'.format(drug_name), bbox_inches='tight')
+
+
+def plot_age(df, drug_name):
+    plt.figure()
+    ax = df[['Age', 'File_Number_Sequence']].drop_duplicates()['Age'].hist()
+    ax.set_title('Age Distribution: {0}'.format(drug_name))
+    ax.set_ylabel('Count')
+    ax.set_xlabel('Age (Years)')
+    plt.savefig(
+        FIGURE_PATH + '/{0}/age_distribution.png'.format(drug_name), bbox_inches='tight')
+
+
+def plot_race(df, drug_name):
+    plt.figure()
+    ax = df[['Defendant_Race', 'File_Number_Sequence']
+            ].drop_duplicates()['Defendant_Race'].value_counts().plot.bar()
+    ax.set_title('Charges by Race: {0}'.format(drug_name))
+    ax.set_ylabel('Count')
+    ax.get_yaxis().set_major_formatter(
+        matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+    plt.savefig(
+        FIGURE_PATH + '/{0}/race_distribution.png'.format(drug_name), bbox_inches='tight')
+
+
+def plot_offense_codes(df, drug_name):
+    plt.figure()
+    ax = df[['Charged_Offense_Code', 'File_Number_Sequence']
+            ].drop_duplicates()['Charged_Offense_Code'].value_counts().plot.bar()
+    ax.set_title('Offense Code Frequency: {0}'.format(drug_name))
+    ax.set_ylabel('Count')
+    plt.savefig(
+        FIGURE_PATH + '/{0}/offense_code_distribution.png'.format(drug_name), bbox_inches='tight')
