@@ -3,6 +3,12 @@ This repository aims to look at how different marijuana-related offenses are tre
 
 Distinguish between possession/using, selling/delivering, and trafficking
 
-Add meth
-Pick one drug type for first analysis and then you can replicate that process for other types
-To refine the paper, you can look at the different types of drugs/classifications
+**TODO**:
+- To refine the paper, you can look at the different types of drugs/classifications
+- Ask contacts what punishments are harsher than others
+
+**Research Question**: How does punishment vary for drug-related crimes county-by-county in North Carolina?
+
+**Notes**:
+- Use Logistic Regression if dependent variable matches that (0 or 1)
+- Use Linear Regression if dependent variable isn't bounded/categorical
