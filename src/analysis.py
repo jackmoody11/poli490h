@@ -6,31 +6,10 @@ import os
 
 path = os.path.abspath(os.path.dirname(__file__))
 data_path = os.path.join(path, '/../data')
-DRUG_OUTPUT_FILES = {k: data_path + '/' +
-                     k for k in ['marijuana', 'cocaine', 'heroin']}
+# DRUG_OUTPUT_FILES = {k: data_path + '/' +
+#                      k for k in ['marijuana', 'cocaine', 'heroin']}
 FIGURE_PATH = os.path.abspath(
     os.path.dirname(__file__)) + '/../figures'
-
-
-def analysis(drug):
-    drug_race_offense_code = drug.groupby(
-        ['Defendant_Race', 'Charged_Offense_Code']).count()['County'].unstack('Defendant_Race')
-    drug_offense_code_counts = drug_race_offense_code.T.sum()
-    drug_race_counts = drug_race_offense_code.sum()
-
-    drug_race_pct = drug_race_counts / drug_race_counts.sum()
-
-    drug['Probation_Frame'].replace(
-        {'Y': 365, 'M': 30, 'D': 1, '.': np.nan}, inplace=True)
-    drug['Probation_Length'].replace({'.': np.nan}, inplace=True)
-
-    drug.loc['Probation_Length'] = drug['Probation_Length'].replace({
-        '.': np.nan})
-    drug.loc['Probation_Length'] = drug['Probation_Length'].astype(float)
-
-    drug.loc['Probation_Length'] = drug['Probation_Length'] * \
-        drug['Probation_Frame']
-    drug_probation_length = drug['Probation_Length'].dropna()
 
 
 def create_figures(df, drug_name):
@@ -38,6 +17,7 @@ def create_figures(df, drug_name):
     plot_age(df, drug_name)
     plot_race(df, drug_name)
     plot_offense_codes(df, drug_name)
+    plot_offenses_v_age(df, drug_name)
 
 
 def plot_probation_length(df, drug_name):
@@ -91,3 +71,5 @@ def plot_offenses_v_age(df, drug_name):
     ax.set_title('Number of Charges by Age')
     ax.set_xlabel('Age')
     ax.set_ylabel('Average Number of Charges')
+    plt.savefig(
+        FIGURE_PATH + '/{0}/average_offense_count_by_age.png'.format(drug_name), bbox_inches='tight')
