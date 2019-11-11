@@ -15,7 +15,8 @@ if __name__ == '__main__':
         county_codes = json.load(f)
     with open('../data/reference/fields.json', 'r') as f:
         fields = json.load(f)
-
+    county_populations = pd.read_csv(
+        '../data/reference/nc_counties_population.csv', index_col='County')['2018_Population'].to_dict()
     date_columns = ['CRRRCD', 'CRRTDT', 'CROCDT', 'CRODTA', 'CRRDOB']
     df = pd.read_csv('../data/raw/3drugs.csv',
                      dtype={'CRRKCY': str, 'CRRRCD': str, 'CRRDTS': str}, parse_dates=date_columns, date_parser=date_parser, usecols=fields.keys())
@@ -67,5 +68,44 @@ if __name__ == '__main__':
     df['Probation_Frame'].replace({'Y': 365, 'M': 30, 'D': 1}, inplace=True)
     df['Probation_Length'] = df['Probation_Length'].astype(float)
     df['Probation_in_Days'] = df['Probation_Frame'] * df['Probation_Length']
+
+    # Code min and max sentences to days
+    # NOTE: This may need to be changed, as some of the day conversions cannot actually
+    # be represented with numbers
+    df['Minimum_Sentence_Length_in_Days'] = df['Minimum_Sentence_Length'].astype(float) * \
+        df['Minimum_Sentence_Frame'].map({
+            'D': 1.0,
+            'M': 30.0,
+            'Y': 365.0,
+            'L': 10_000.0,
+            'X': 30_000.0,
+            'P': 5_000.0,
+            'F': 0.0
+        })
+    df['Maximum_Sentence_Length_in_Days'] = df['Maximum_Sentence_Length'].astype(float) * df['Maximum_Sentence_Frame'].map({
+        'D': 1.0,
+        'M': 30.0,
+        'Y': 365.0
+    })
+
+    # Add mappings for attorney types
+    attorney_mappings = {
+        'A': 'Appointed',
+        'P': 'Public Defender',
+        'R': 'Privately Retained or Self',
+        'W': 'Waived'
+    }
+    df['District_Court_Attorney_Type'] = df['District_Court_Attorney_Type'].map(
+        attorney_mappings)
+    df['Superior_Court_Attorney_Type'] = df['Superior_Court_Attorney_Type'].map(
+        attorney_mappings)
+
+    # Add county population
+    def assign_county_population(county):
+        try:
+            return county_populations[county]
+        except KeyError:
+            return np.nan
+    df['County_Population'] = df['County'].apply(assign_county_population)
 
     df.to_csv('../data/cleaned/3drugs_cleaned.csv', na_rep='N/A')
