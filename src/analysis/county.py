@@ -1,5 +1,7 @@
-from analysis import save_figure
+from analysis.base import _Base
 
 
-def county_analysis(df, drug_name):
-    pass
+class CountyAnalysis(_Base):
+    def __init__(self, df, drug_name, sentence_type):
+        super().__init__(df, drug_name, sentence_type)
+        self.__methods__ = []
