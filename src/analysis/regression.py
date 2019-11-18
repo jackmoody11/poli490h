@@ -20,8 +20,7 @@ class RegressionAnalysis(_Base):
             y = _df[harshness_measure]
             X = pd.concat([_df['Age'], *[pd.get_dummies(_df[var]) for var in ('Defendant_Race',
                                                                               'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code')]], axis=1)
-            # Avoid numpy .ptp deprecation warning : https://stackoverflow.com/questions/56310898/futurewarning-method-ptp
-            X = sm.add_constant(X.to_numpy())
+            X = sm.add_constant(X)
             model = sm.OLS(y, X)
             results = model.fit()
             summary = results.summary2()
@@ -31,6 +30,7 @@ class RegressionAnalysis(_Base):
                      'fontsize': 10}, fontproperties='monospace')
             plt.axis('off')
             self.save_figure('regression')
+            print(summary)
             # results_html = summary.tables[1].as_html()
             # coef_header = self.drug_name + '_' + sentence_type + '_coef'
             # p_value_header = self.drug_name + '_' + sentence_type + '_p_value'

@@ -70,6 +70,5 @@ if __name__ == '__main__':
     # Loop through analysis for each drug and sentence type
     for drug_name, df in {'marijuana': marijuana, 'cocaine': cocaine, 'heroin': heroin}.items():
         for sentence_type in ('Active', 'Intermediate', 'Community'):
-            print("Drug: {0}, Type: {1}".format(drug_name, sentence_type))
             _df = df[df['Active_Sentence_Indicator'] == sentence_type]
             create_figures(_df, drug_name, sentence_type)
