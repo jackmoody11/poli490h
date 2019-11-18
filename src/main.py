@@ -2,6 +2,7 @@ import pandas as pd
 import geopandas as gpd
 import os
 from analysis.main import create_figures
+from analysis.utils import linear_regression
 from make_map import map_all
 import matplotlib.pyplot as plt
 
@@ -30,14 +31,8 @@ if __name__ == '__main__':
     cocaine_offense_codes = read_offense_code('possession/cocaine.csv')['code']
     heroin_offense_codes = read_offense_code('possession/heroin.csv')['code']
 
-    # Read in files and initial data frames, offense codes, and county codes
-    # Be sure to change to 3drugs.csv
-    # us_counties = gpd.read_file(data_path + '/map/us_counties.json')
-    # nc_zip_codes = gpd.read_file(data_path + '/map/nc_zip_codes.json')
-    # nc_zip_codes['ZCTA5CE10'] = nc_zip_codes['ZCTA5CE10'].astype(int)
-
     # Clean data frame
-    df = pd.read_csv('../data/cleaned/3drugs_cleaned.csv')
+    df = pd.read_csv('../data/cleaned/3drugs_cleaned.csv', low_memory=False)
     # Limit to different types of drug offenses
     marijuana = df[df['Charged_Offense_Code'].isin(
         marijuana_offense_codes)]
@@ -64,7 +59,16 @@ if __name__ == '__main__':
     ax.set_ylabel('Minimum Sentence Length (Days)')
     save_figure('composite_min_sentence_by_attorney_type')
 
-    # Loop through analysis for each drug
-    for drug_name, drug in {'marijuana': marijuana, 'cocaine': cocaine, 'heroin': heroin}.items():
-        create_figures(drug, drug_name)
-        # map_all(drug, drug_name, nc_zip_codes, us_counties)
+    # Linear regression results
+    results = linear_regression(
+        df, 'Minimum_Sentence_Length_in_Days', ['Age', 'County_Population'], 'Plea_Code', 'Defendant_Sex_Code', 'District_Court_Attorney_Type', 'Defendant_Race')
+    plt.text(0.01, 0.05, str(results.summary()), {
+             'fontsize': 10}, fontproperties='monospace')
+    plt.axis('off')
+    save_figure('linear_regression')
+
+    # Loop through analysis for each drug and sentence type
+    for drug_name, df in {'marijuana': marijuana, 'cocaine': cocaine, 'heroin': heroin}.items():
+        for sentence_type in ('Active', 'Intermediate', 'Community'):
+            _df = df[df['Active_Sentence_Indicator'] == sentence_type]
+            create_figures(_df, drug_name, sentence_type)
