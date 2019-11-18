@@ -17,6 +17,8 @@ if __name__ == '__main__':
         fields = json.load(f)
     county_populations = pd.read_csv(
         '../data/reference/nc_counties_population.csv', index_col='County')['2018_Population'].to_dict()
+    county_size = pd.read_csv(
+        '../data/reference/nc_counties_population.csv', index_col='County')['2010_Square_Miles'].to_dict()
     date_columns = ['CRRRCD', 'CRRTDT', 'CROCDT', 'CRODTA', 'CRRDOB']
     df = pd.read_csv('../data/raw/3drugs.csv',
                      dtype={'CRRKCY': str, 'CRRRCD': str, 'CRRDTS': str}, parse_dates=date_columns, date_parser=date_parser, usecols=fields.keys())
@@ -51,7 +53,12 @@ if __name__ == '__main__':
         'RS': 'Responsible'
     }
     df['Verdict_Code'] = df.loc[:, 'Verdict_Code'].map(verdict_codes)
-
+    df['Defendant_Sex_Code'] = df['Defendant_Sex_Code'].map({
+        'M': 'Male',
+        'F': 'Female',
+        'U': 'Unknown',
+        'X': 'Non-person'
+    })
     # Condense year to one column
     df['Year'] = pd.to_datetime(
         df['File_Number_Century'] * 100 + df['File_Number_Year'], format='%Y')
@@ -100,12 +107,28 @@ if __name__ == '__main__':
     df['Superior_Court_Attorney_Type'] = df['Superior_Court_Attorney_Type'].map(
         attorney_mappings)
 
-    # Add county population
+    df['Active_Sentence_Indicator'] = df['Active_Sentence_Indicator'].map({
+        'A': 'Active',
+        'C': 'Community',
+        'I': 'Intermediate'
+    })
+    # Add county population and size
+
     def assign_county_population(county):
         try:
             return county_populations[county]
         except KeyError:
             return np.nan
+
+    def assign_county_size(county):
+        try:
+            return county_size[county]
+        except KeyError:
+            return np.nan
+
     df['County_Population'] = df['County'].apply(assign_county_population)
+    df['County_Size_Square_Miles'] = df['County'].apply(assign_county_size)
+    df['County_Population_Square_Mile'] = df['County_Population'] / \
+        df['County_Size_Square_Miles']
 
     df.to_csv('../data/cleaned/3drugs_cleaned.csv', na_rep='N/A')
