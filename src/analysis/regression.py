@@ -24,7 +24,7 @@ class RegressionAnalysis(_Base):
             X = sm.add_constant(X.to_numpy())
             model = sm.OLS(y, X)
             results = model.fit()
-            summary = results.summary()
+            summary = results.summary2()
 
             # plt.rc('figure', figsize=(12, 7))
             plt.text(0.01, 0.05, str(summary), {
