@@ -18,13 +18,15 @@ def save_figure(filename):
     plt.close()
 
 
+data_path = os.path.dirname(os.path.realpath(
+    __file__)) + '/../data'
+
+
+def read_offense_code(csv_file):
+    return pd.read_csv(data_path + '/offense_codes/{0}'.format(csv_file))
+
+
 if __name__ == '__main__':
-    data_path = os.path.dirname(os.path.realpath(
-        __file__)) + '/../data'
-
-    def read_offense_code(csv_file):
-        return pd.read_csv(data_path + '/offense_codes/{0}'.format(csv_file))
-
     # Only use codes which correspond to possession
     marijuana_offense_codes = read_offense_code(
         'possession/marijuana.csv')['code']
