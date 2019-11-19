@@ -10,6 +10,7 @@ class _Base():
         self.df = df
         self.drug = drug_name
         self.st = sentence_type
+        self.__methods__ = []
 
     def save_figure(self, filename):
         plt.savefig(
@@ -17,7 +18,6 @@ class _Base():
         plt.close()
 
     def run(self):
-        __methods__ = []
         for method in self.__methods__:
             try:
                 method()
