@@ -21,8 +21,8 @@ class RegressionAnalysis(_Base):
             _df = self.df[(self.df['Active_Sentence_Indicator']
                            == self.st)]
 
-        results = linear_regression(_df, harshness_measure[self.st], ['Age'], [
-                                    'Defendant_Race', 'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code'])
+        results = linear_regression(_df, harshness_measure[self.st], ['Age'],
+                                    'Defendant_Race', 'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code')
         plt.text(0.01, 0.05, str(results.summary2()), {
             'fontsize': 10}, fontproperties='monospace')
         plt.axis('off')
