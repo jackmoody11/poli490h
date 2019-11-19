@@ -19,7 +19,4 @@ class _Base():
 
     def run(self):
         for method in self.__methods__:
-            try:
-                method()
-            except (TypeError, ValueError):
-                pass
+            method()
