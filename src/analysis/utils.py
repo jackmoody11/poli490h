@@ -23,5 +23,10 @@ def get_dummies(df, *dummies):
                  'Defendant_Sex_Code': 'Female'}
     for dummy in dummies:
         _df = pd.get_dummies(df[dummy])
-        dfs.append(_df.drop(dummy_map[dummy], axis=1))
+        try:
+            dfs.append(_df.drop(dummy_map[dummy], axis=1))
+        # If dummy variable in dummy_map isn't available, at least one dummy var dropped.
+        # No multicolinearity from dummy var.
+        except KeyError:
+            dfs.append(_df)
     return pd.concat(dfs, axis=1)
