@@ -10,7 +10,7 @@ class PleaAnalysis(_Base):
         self.__methods__ = [self.plot_plea_v_probation,
                             self.plot_plea_v_min_sentence, self.plot_plea_v_max_sentence]
 
-    @_Base.interemdiate
+    @_Base.intermediate
     def plot_plea_v_probation(self):
         ax = self.df[['Probation_in_Days', 'Plea_Code']
                      ].boxplot(grid=False, by='Plea_Code')
