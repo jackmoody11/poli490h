@@ -10,6 +10,7 @@ class PleaAnalysis(_Base):
         self.__methods__ = [self.plot_plea_v_probation,
                             self.plot_plea_v_min_sentence, self.plot_plea_v_max_sentence]
 
+    @_Base.interemdiate
     def plot_plea_v_probation(self):
         ax = self.df[['Probation_in_Days', 'Plea_Code']
                      ].boxplot(grid=False, by='Plea_Code')
@@ -21,6 +22,7 @@ class PleaAnalysis(_Base):
         plt.title("Probation Length by Plea: {0}".format(self.drug))
         self.save_figure('plea_form_v_probation')
 
+    @_Base.active
     def plot_plea_v_min_sentence(self):
         ax = self.df[['Minimum_Sentence_Length_in_Days', 'Plea_Code']
                      ].boxplot(grid=False, by='Plea_Code')
@@ -32,6 +34,7 @@ class PleaAnalysis(_Base):
         plt.title("Minimum Sentence Length by Plea: {0}".format(self.drug))
         self.save_figure('plea_form_v_min_sentence')
 
+    @_Base.active
     def plot_plea_v_max_sentence(self):
         ax = self.df[['Maximum_Sentence_Length_in_Days', 'Plea_Code']
                      ].boxplot(grid=False, by='Plea_Code')

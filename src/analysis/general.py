@@ -7,10 +7,12 @@ class GeneralAnalysis(_Base):
         super().__init__(df, drug_name, sentence_type)
         self.__methods__ = []
 
+    @_Base.intermediate
     def plot_probation_length(self):
         plt.figure()
         ax = self.df['Probation_Length'].dropna().plot.hist()
-        ax.set_title('Probation Length Distribution: {0}'.format(self.drug))
+        ax.set_title(
+            'Probation Length Distribution: {0}'.format(self.drug))
         ax.set_ylabel('Count')
         ax.set_xlabel('Probation Length (Days)')
         ax.grid(False)

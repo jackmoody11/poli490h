@@ -10,6 +10,7 @@ class AttorneyAnalysis(_Base):
     def attorney_type_analysis(self):
         plot_min_sentence_by_attorney_type(df, drug_name)
 
+    @_Base.active
     def plot_min_sentence_by_attorney_type(self):
         ax = self.df[['District_Court_Attorney_Type', 'Minimum_Sentence_Length_in_Days']].boxplot(
             grid=False, by='District_Court_Attorney_Type', showfliers=False)

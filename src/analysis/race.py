@@ -19,6 +19,7 @@ class RaceAnalysis(_Base):
             matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
         self.save_figure('race_distribution')
 
+    @_Base.active
     def plot_race_v_min_sentence(self):
         ax = self.df[['Defendant_Race', 'Minimum_Sentence_Length_in_Days']
                      ].boxplot(grid=False, by='Defendant_Race')
@@ -30,6 +31,7 @@ class RaceAnalysis(_Base):
         plt.title("Minimum Sentence Length by Race: {0}".format(self.drug))
         self.save_figure('race_v_min_sentence')
 
+    @_Base.active
     def plot_race_v_max_sentence(self):
         ax = self.df[['Defendant_Race', 'Maximum_Sentence_Length_in_Days']
                      ].boxplot(grid=False, by='Defendant_Race')

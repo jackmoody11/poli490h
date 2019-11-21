@@ -28,6 +28,7 @@ class AgeAnalysis(_Base):
         ax.set_ylabel('Average Number of Charges')
         self.save_figure('average_offense_count_by_age')
 
+    @_Base.intermediate
     def plot_age_v_avg_probation_length(self):
         independent = 'Age'
         dependent = 'Probation_Length'
@@ -39,6 +40,7 @@ class AgeAnalysis(_Base):
         ax.set_ylabel('Average Probation Length (Days)')
         self.save_figure('age_v_avg_probation_length')
 
+    @_Base.active
     def plot_age_v_avg_min_sentence_length(self):
         independent = 'Age'
         dependent = 'Minimum_Sentence_Length_in_Days'
@@ -50,6 +52,9 @@ class AgeAnalysis(_Base):
         ax.set_ylabel('Average Minimum Sentence Length (Days)')
         self.save_figure('age_v_avg_min_sentence_length')
 
+    # @_Base.community(self.st)
+    # def plot_age_v_community_service(self):
+    @_Base.active
     def plot_age_v_avg_max_sentence_length(self):
         independent = 'Age'
         dependent = 'Maximum_Sentence_Length_in_Days'
