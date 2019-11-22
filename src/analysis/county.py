@@ -26,9 +26,9 @@ class CountyAnalysis(_Base):
                                   == '37'][['NAME', 'geometry']]
         nc_counties['County'] = nc_counties['NAME'].apply(lambda x: x.upper())
         county_coefficients = nc_counties[['County', 'geometry']].merge(
-            coefficients, left_on='County', right_index=True)
-        county_coefficients = county_coefficients.replace(
-            to_replace=[None], value=np.nan)
+            coefficients, how='outer', left_on='County', right_index=True)
+        county_coefficients = county_coefficients[county_coefficients['County'].isin(
+            nc_counties['County'])]
         if len(county_coefficients.dropna()) > 0:
             print(county_coefficients)
             ax = county_coefficients.plot(column=self.drug + '_' + self.st,
