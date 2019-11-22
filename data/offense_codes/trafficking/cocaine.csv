@@ -1,0 +1,21 @@
+code,offense_type,offense_class,description
+3435,F,N/A,Sell/Deliver Cocaine
+3436,F,N/A,Conspire Sell/Deliver Cocaine
+3441,F,G,Sell Cocaine
+3452,F,I,Attempted Possession Cocaine
+3456,F,H,Deliver Cocaine
+3481,F,G,Conspire Sell Cocaine
+3491,F,H,Conspire Deliver Cocaine
+3530,F,N/A,Trafficking in Cocaine
+3534,F,N/A,Conspire to Traffic in Cocaine
+3552,F,H,Manufacture Cocaine
+3553,F,H,Sell or Deliver Cocaine
+3554,F,H,Sell Cocaine
+3555,F,H,PWISD Cocaine
+3556,F,H,PWIMSD Cocaine
+3557,F,H,P/W/I/M Cocaine
+3558,F,H,P/W/I/S Cocaine
+3559,F,H,P/W/I/D Cocaine
+3560,F,I,Felony Possession Cocaine 
+3561,M,N/A,Simple Possession Cocaine (Misdemeanor)
+3562,F,H,Conspire to Sell or Deliver Cocaine
