@@ -3,3 +3,5 @@ numpy
 matplotlib
 geopandas
 dateutil
+statsmodels
+tqdm
