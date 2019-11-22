@@ -13,6 +13,18 @@ def linear_regression(df, dep_vars, indep_vars, *dummy_vars):
     return results
 
 
+def get_significant_coefficients(results, drug_name, sentence_type):
+    summary = results.summary()
+    results_html = summary.tables[1].as_html()
+    coef_header = drug_name + '_' + sentence_type
+    p_value_header = drug_name + '_' + sentence_type + '_p_value'
+    series = pd.read_html(results_html, header=0, index_col=0)[0][[
+        'coef', 'P>|t|']].rename({'coef': coef_header, 'P>|t|': p_value_header}, axis=1)
+    series.drop_duplicates(inplace=True)
+    # Only take values that were statistically significant so that
+    return series[series[p_value_header] <= 0.05][coef_header]
+
+
 def get_dummies(df, *dummies):
     """ Drops certain dummy variable to test hypotheses and prevent multicolinearity. """
     dfs = []

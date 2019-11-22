@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 class GeneralAnalysis(_Base):
     def __init__(self, df, drug_name, sentence_type):
         super().__init__(df, drug_name, sentence_type)
-        self.__methods__ = []
+        self.__methods__ = [self.plot_probation_length]
 
     @_Base.intermediate
     def plot_probation_length(self):
@@ -16,4 +16,4 @@ class GeneralAnalysis(_Base):
         ax.set_ylabel('Count')
         ax.set_xlabel('Probation Length (Days)')
         ax.grid(False)
-        save_figure('probation_length')
+        self.save_figure('probation_length')
