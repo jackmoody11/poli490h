@@ -8,13 +8,6 @@ class AgeAnalysis(_Base):
         self.__methods__ = [self.plot_age, self.plot_offenses_v_age, self.plot_age_v_avg_probation_length,
                             self.plot_age_v_avg_min_sentence_length, self.plot_age_v_avg_max_sentence_length]
 
-    def run(self):
-        self.plot_age()
-        self.plot_offenses_v_age()
-        self.plot_age_v_avg_probation_length()
-        self.plot_age_v_avg_min_sentence_length()
-        self.plot_age_v_avg_max_sentence_length()
-
     def plot_age(self):
         plt.figure()
         ax = self.df[['Age', 'File_Number_Sequence']].drop_duplicates()[
