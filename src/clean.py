@@ -20,7 +20,7 @@ if __name__ == '__main__':
     county_size = pd.read_csv(
         '../data/reference/nc_counties_population.csv', index_col='County')['2010_Square_Miles'].to_dict()
     date_columns = ['CRRRCD', 'CRRTDT', 'CROCDT', 'CRODTA', 'CRRDOB']
-    df = pd.read_csv('../data/raw/3drugs.csv',
+    df = pd.read_csv('../data/raw/3drugs.zip',
                      dtype={'CRRKCY': str, 'CRRRCD': str, 'CRRDTS': str}, parse_dates=date_columns, date_parser=date_parser, usecols=fields.keys())
     df = df.loc[:, fields.keys()]  # limit data frame to desired fields
     df.rename(columns=fields, inplace=True)
@@ -131,4 +131,5 @@ if __name__ == '__main__':
     df['County_Population_Square_Mile'] = df['County_Population'] / \
         df['County_Size_Square_Miles']
 
-    df.to_csv('../data/cleaned/3drugs_cleaned.csv', na_rep='N/A')
+    df.to_csv('../data/cleaned/3drugs_cleaned.zip',
+              compression='zip', na_rep='N/A')
