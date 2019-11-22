@@ -30,6 +30,7 @@ class CountyAnalysis(_Base):
         county_coefficients = county_coefficients.replace(
             to_replace=[None], value=np.nan)
         if len(county_coefficients.dropna()) > 0:
+            print(county_coefficients)
             ax = county_coefficients.plot(column=self.drug + '_' + self.st,
                                           legend=True,
                                           cmap=self.get_cmap(),
