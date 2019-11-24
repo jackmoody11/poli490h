@@ -37,15 +37,16 @@ def active(f):
 
 
 class _Base():
-    harshness_measure = {'Active': 'Minimum_Sentence_Length_in_Days',
-                         'Intermediate': 'Probation_in_Days',
-                         'Community': 'Community_Service_Hours'}
+
     from analysis.base import active, intermediate, community
 
     def __init__(self, df, drug_name, sentence_type):
         self.df = df
         self.drug = drug_name
         self.st = sentence_type
+        self.harshness_measure = {'Active': 'Minimum_Sentence_Length_in_Days',
+                                  'Intermediate': 'Probation_in_Days',
+                                  'Community': 'Community_Service_Hours'}
         self.__methods__ = []
 
     def save_figure(self, filename):

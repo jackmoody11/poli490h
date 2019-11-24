@@ -6,8 +6,7 @@ from analysis.base import _Base
 class RaceAnalysis(_Base):
     def __init__(self, df, drug_name, sentence_type):
         super().__init__(df, drug_name, sentence_type)
-        self.__methods__ = [self.plot_race,
-                            self.plot_race_v_min_sentence, self.plot_race_v_max_sentence]
+        self.__methods__ = [self.plot_race, self.plot_race_v_punishment]
 
     def plot_race(self):
         plt.figure()
@@ -19,26 +18,13 @@ class RaceAnalysis(_Base):
             matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
         self.save_figure('race_distribution')
 
-    @_Base.active
-    def plot_race_v_min_sentence(self):
-        ax = self.df[['Defendant_Race', 'Minimum_Sentence_Length_in_Days']
+    def plot_race_v_punishment(self):
+        ax = self.df[['Defendant_Race', self.harshness_measure[self.st]]
                      ].boxplot(grid=False, by='Defendant_Race')
         ax.set_title('')
         plt.xticks(rotation=90)
         ax.get_figure().suptitle('')
         ax.set_xlabel('Race')
-        ax.set_ylabel('Minimum Sentence Length (Days)')
-        plt.title("Minimum Sentence Length by Race: {0}".format(self.drug))
-        self.save_figure('race_v_min_sentence')
-
-    @_Base.active
-    def plot_race_v_max_sentence(self):
-        ax = self.df[['Defendant_Race', 'Maximum_Sentence_Length_in_Days']
-                     ].boxplot(grid=False, by='Defendant_Race')
-        ax.set_title('')
-        plt.xticks(rotation=90)
-        ax.get_figure().suptitle('')
-        ax.set_xlabel('Race')
-        ax.set_ylabel('Maximum Sentence Length (Days)')
-        plt.title("Maximum Sentence Length by Race: {0}".format(self.drug))
-        self.save_figure('race_v_max_sentence')
+        ax.set_ylabel(' '.join(self.harshness_measure[self.st].split('_')))
+        plt.title("{0} Punishment by Race: {1}".format(self.st, self.drug))
+        self.save_figure('race_v_punishment')

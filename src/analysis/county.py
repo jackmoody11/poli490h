@@ -30,7 +30,6 @@ class CountyAnalysis(_Base):
         county_coefficients = county_coefficients[county_coefficients['County'].isin(
             nc_counties['County'])]
         if len(county_coefficients.dropna()) > 0:
-            print(county_coefficients)
             ax = county_coefficients.plot(column=self.drug + '_' + self.st,
                                           legend=True,
                                           cmap=self.get_cmap(),
@@ -39,6 +38,9 @@ class CountyAnalysis(_Base):
                                           )
             plt.title('{0} {1} Punishment Significanlty Different from Wake County'.format(
                 self.drug, self.st))
+            plt.xticks([])
+            plt.yticks([])
+            ax.axis('off')
             self.save_figure('punishment_harshness_by_county')
 
     def get_cmap(self):

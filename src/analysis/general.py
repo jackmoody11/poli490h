@@ -5,15 +5,14 @@ import matplotlib.pyplot as plt
 class GeneralAnalysis(_Base):
     def __init__(self, df, drug_name, sentence_type):
         super().__init__(df, drug_name, sentence_type)
-        self.__methods__ = [self.plot_probation_length]
+        self.__methods__ = [self.plot_punishment]
 
-    @_Base.intermediate
-    def plot_probation_length(self):
+    def plot_punishment(self):
         plt.figure()
-        ax = self.df['Probation_Length'].dropna().plot.hist()
+        ax = self.df[self.harshness_measure[self.st]].dropna().plot.hist()
         ax.set_title(
-            'Probation Length Distribution: {0}'.format(self.drug))
+            '{0} Punishment Distribution: {1}'.format(self.st, self.drug))
         ax.set_ylabel('Count')
-        ax.set_xlabel('Probation Length (Days)')
+        ax.set_xlabel(' '.join(self.harshness_measure[self.st].split('_')))
         ax.grid(False)
-        self.save_figure('probation_length')
+        self.save_figure('punishment')

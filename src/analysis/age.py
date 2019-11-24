@@ -5,8 +5,8 @@ from analysis.base import _Base
 class AgeAnalysis(_Base):
     def __init__(self, df, drug_name, sentence_type):
         super().__init__(df, drug_name, sentence_type)
-        self.__methods__ = [self.plot_age, self.plot_offenses_v_age, self.plot_age_v_avg_probation_length,
-                            self.plot_age_v_avg_min_sentence_length, self.plot_age_v_avg_max_sentence_length]
+        self.__methods__ = [self.plot_age,
+                            self.plot_offenses_v_age, self.plot_age_v_punishment]
 
     def plot_age(self):
         plt.figure()
@@ -28,40 +28,13 @@ class AgeAnalysis(_Base):
         ax.set_ylabel('Average Number of Charges')
         self.save_figure('average_offense_count_by_age')
 
-    @_Base.intermediate
-    def plot_age_v_avg_probation_length(self):
+    def plot_age_v_punishment(self):
         independent = 'Age'
-        dependent = 'Probation_Length'
+        dependent = self.harshness_measure[self.st]
         ax = self.df[[independent, dependent]].groupby(
             independent)[dependent].mean().plot(style='.')
         ax.set_title(
-            'Average Probation Length by Age: {0}'.format(self.drug))
+            'Average {0} Punishment by Age: {1}'.format(self.st, self.drug))
         ax.set_xlabel(independent)
-        ax.set_ylabel('Average Probation Length (Days)')
-        self.save_figure('age_v_avg_probation_length')
-
-    @_Base.active
-    def plot_age_v_avg_min_sentence_length(self):
-        independent = 'Age'
-        dependent = 'Minimum_Sentence_Length_in_Days'
-        ax = self.df[[independent, dependent]].groupby(
-            independent)[dependent].mean().plot(style='.')
-        ax.set_title(
-            'Average Minimum Sentence Length by Age: {0}'.format(self.drug))
-        ax.set_xlabel(independent)
-        ax.set_ylabel('Average Minimum Sentence Length (Days)')
-        self.save_figure('age_v_avg_min_sentence_length')
-
-    # @_Base.community(self.st)
-    # def plot_age_v_community_service(self):
-    @_Base.active
-    def plot_age_v_avg_max_sentence_length(self):
-        independent = 'Age'
-        dependent = 'Maximum_Sentence_Length_in_Days'
-        ax = self.df[[independent, dependent]].groupby(
-            independent)[dependent].mean().plot(style='.')
-        ax.set_title(
-            'Average Maximum Sentence Length by Age: {0}'.format(self.drug))
-        ax.set_xlabel(independent)
-        ax.set_ylabel('Average Maximum Sentence Length (Days)')
-        self.save_figure('age_v_avg_max_sentence_length')
+        ax.set_ylabel(' '.join(self.harshness_measure[self.st].split('_')))
+        self.save_figure('age_v_punishment')
