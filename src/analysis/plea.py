@@ -10,12 +10,12 @@ class PleaAnalysis(_Base):
         self.__methods__ = [self.plot_plea_v_punishment]
 
     def plot_plea_v_punishment(self):
-        ax = self.df[[self.harshness_measure[self.st], 'Plea_Code']
+        ax = self.df[[self.harshness_measure, 'Plea_Code']
                      ].boxplot(grid=False, by='Plea_Code')
         ax.set_title('')
         plt.xticks(rotation=90)
         ax.get_figure().suptitle('')
         ax.set_xlabel('Plea Code')
-        ax.set_ylabel(' '.join(self.harshness_measure[self.st].split('_')))
-        plt.title("{0} Punishment by Plea: {1}".format(self.st, self.drug))
+        ax.set_ylabel(self.get_punishment_name())
+        plt.title("{0} Punishment by Plea: {1}".format(self.sentence_type, self.drug))
         self.save_figure('plea_form_v_punishment')

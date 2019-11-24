@@ -9,7 +9,7 @@ FIGURE_PATH = os.path.abspath(
 def community(f):
     @wraps(f)
     def wrapper(self, *args, **kwargs):
-        if self.st == 'Community':
+        if self.sentence_type == 'Community':
             return f(self, *args, **kwargs)
         else:
             pass
@@ -19,7 +19,7 @@ def community(f):
 def intermediate(f):
     @wraps(f)
     def wrapper(self, *args, **kwargs):
-        if self.st == 'Intermediate':
+        if self.sentence_type == 'Intermediate':
             return f(self, *args, **kwargs)
         else:
             pass
@@ -29,7 +29,7 @@ def intermediate(f):
 def active(f):
     @wraps(f)
     def wrapper(self, *args, **kwargs):
-        if self.st == 'Active':
+        if self.sentence_type == 'Active':
             return f(self, *args, **kwargs)
         else:
             pass
@@ -41,19 +41,23 @@ class _Base():
     from analysis.base import active, intermediate, community
 
     def __init__(self, df, drug_name, sentence_type):
+        harshness_map = {'Active': 'Minimum_Sentence_Length_in_Days',
+                         'Intermediate': 'Probation_in_Days',
+                         'Community': 'Community_Service_Hours'}
         self.df = df
         self.drug = drug_name
-        self.st = sentence_type
-        self.harshness_measure = {'Active': 'Minimum_Sentence_Length_in_Days',
-                                  'Intermediate': 'Probation_in_Days',
-                                  'Community': 'Community_Service_Hours'}
+        self.sentence_type = sentence_type
+        self.harshness_measure = harshness_map.get(self.sentence_type)
         self.__methods__ = []
 
     def save_figure(self, filename):
         plt.savefig(
-            FIGURE_PATH + '/{0}/{1}/{2}.png'.format(self.drug, self.st, filename), bbox_inches='tight', transparent=True)
+            FIGURE_PATH + '/{0}/{1}/{2}.png'.format(self.drug, self.sentence_type, filename), bbox_inches='tight', transparent=True)
         plt.close()
 
     def run(self):
         for method in self.__methods__:
             method()
+
+    def get_punishment_name(self):
+        return ' '.join(self.harshness_measure.split('_'))

@@ -18,12 +18,12 @@ class RaceAnalysis(_Base):
         self.save_figure('race_distribution')
 
     def plot_race_v_punishment(self):
-        ax = self.df[['Defendant_Race', self.harshness_measure[self.st]]
+        ax = self.df[['Defendant_Race', self.harshness_measure]
                      ].boxplot(grid=False, by='Defendant_Race')
         ax.set_title('')
         plt.xticks(rotation=90)
         ax.get_figure().suptitle('')
         ax.set_xlabel('Race')
-        ax.set_ylabel(' '.join(self.harshness_measure[self.st].split('_')))
-        plt.title("{0} Punishment by Race: {1}".format(self.st, self.drug))
+        ax.set_ylabel(self.get_punishment_name())
+        plt.title("{0} Punishment by Race: {1}".format(self.sentence_type, self.drug))
         self.save_figure('race_v_punishment')

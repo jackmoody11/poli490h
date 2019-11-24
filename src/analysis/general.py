@@ -9,10 +9,10 @@ class GeneralAnalysis(_Base):
 
     def plot_punishment(self):
         plt.figure()
-        ax = self.df[self.harshness_measure[self.st]].dropna().plot.hist()
+        ax = self.df[self.harshness_measure].dropna().plot.hist()
         ax.set_title(
-            '{0} Punishment Distribution: {1}'.format(self.st, self.drug))
+            '{0} Punishment Distribution: {1}'.format(self.sentence_type, self.drug))
         ax.set_ylabel('Count')
-        ax.set_xlabel(' '.join(self.harshness_measure[self.st].split('_')))
+        ax.set_xlabel(self.get_punishment_name())
         ax.grid(False)
         self.save_figure('punishment')

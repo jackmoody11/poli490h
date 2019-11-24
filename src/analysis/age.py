@@ -30,11 +30,11 @@ class AgeAnalysis(_Base):
 
     def plot_age_v_punishment(self):
         independent = 'Age'
-        dependent = self.harshness_measure[self.st]
+        dependent = self.harshness_measure
         ax = self.df[[independent, dependent]].groupby(
             independent)[dependent].mean().plot(style='.')
         ax.set_title(
-            'Average {0} Punishment by Age: {1}'.format(self.st, self.drug))
+            'Average {0} Punishment by Age: {1}'.format(self.sentence_type, self.drug))
         ax.set_xlabel(independent)
-        ax.set_ylabel(' '.join(self.harshness_measure[self.st].split('_')))
+        ax.set_ylabel(self.get_punishment_name())
         self.save_figure('age_v_punishment')

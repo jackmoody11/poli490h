@@ -18,9 +18,9 @@ class CountyAnalysis(_Base):
 
     def map_cases_by_county(self):
         results = RegressionAnalysis(
-            self.df, self.drug, self.st).get_results()
+            self.df, self.drug, self.sentence_type).get_results()
         coefficients = get_significant_coefficients(
-            results, self.drug, self.st)
+            results, self.drug, self.sentence_type)
         us_counties = gpd.read_file(DATA_PATH + '/map/us_counties.json')
         nc_counties = us_counties[us_counties['STATEFP']
                                   == '37'][['NAME', 'geometry']]
@@ -30,14 +30,14 @@ class CountyAnalysis(_Base):
         county_coefficients = county_coefficients[county_coefficients['County'].isin(
             nc_counties['County'])]
         if len(county_coefficients.dropna()) > 0:
-            ax = county_coefficients.plot(column=self.drug + '_' + self.st,
+            ax = county_coefficients.plot(column=self.drug + '_' + self.sentence_type,
                                           legend=True,
                                           cmap=self.get_cmap(),
                                           legend_kwds={
                                               'orientation': 'horizontal'}
                                           )
             plt.title('{0} {1} Punishment Significanlty Different from Wake County'.format(
-                self.drug, self.st))
+                self.drug, self.sentence_type))
             plt.xticks([])
             plt.yticks([])
             ax.axis('off')
