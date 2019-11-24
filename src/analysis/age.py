@@ -1,12 +1,15 @@
 import matplotlib.pyplot as plt
 from analysis.base import _Base
+import seaborn as sns
 
 
 class AgeAnalysis(_Base):
     def __init__(self, df, drug_name, sentence_type):
         super().__init__(df, drug_name, sentence_type)
         self.__methods__ = [self.plot_age,
-                            self.plot_offenses_v_age, self.plot_age_v_punishment]
+                            self.plot_offenses_v_age,
+                            self.plot_age_v_punishment,
+                            self.plot_age_v_punishment_regression]
 
     def plot_age(self):
         plt.figure()
@@ -38,3 +41,16 @@ class AgeAnalysis(_Base):
         ax.set_xlabel(independent)
         ax.set_ylabel(self.get_punishment_name())
         self.save_figure('age_v_punishment')
+
+    def plot_age_v_punishment_regression(self):
+        # TODO: Finish this
+        independent = 'Age'
+        dependent = self.harshness_measure
+        series = self.df[[independent, dependent]].groupby(
+            independent)[dependent].mean()
+        ax = sns.regplot(x=series.index.values, y=series.values)
+        ax.set_xlabel('Age')
+        ax.set_ylabel(self.get_punishment_name())
+        ax.set_title('Age vs. Punishment: {0} {1} Punishment'.format(
+            self.drug, self.sentence_type))
+        self.save_figure('age_v_punishment_regression')

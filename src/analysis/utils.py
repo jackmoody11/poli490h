@@ -1,5 +1,6 @@
 import statsmodels.api as sm
 import pandas as pd
+import warnings
 
 
 def linear_regression(df, dep_vars, indep_vars, *dummy_vars):
@@ -41,4 +42,7 @@ def get_dummies(df, *dummies):
         # No multicolinearity from dummy var.
         except KeyError:
             dfs.append(_df)
-    return pd.concat(dfs, axis=1)
+    try:
+        return pd.concat(dfs, axis=1)
+    except ValueError:
+        warnings.warn('No dummy variables to concatenate.')

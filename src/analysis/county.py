@@ -36,7 +36,7 @@ class CountyAnalysis(_Base):
                                           legend_kwds={
                                               'orientation': 'horizontal'}
                                           )
-            plt.title('{0} {1} Punishment Significanlty Different from Wake County'.format(
+            plt.title('{0} {1} Punishment Significantly Different from Wake County'.format(
                 self.drug, self.sentence_type))
             plt.xticks([])
             plt.yticks([])

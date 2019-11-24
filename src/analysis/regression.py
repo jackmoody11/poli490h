@@ -24,7 +24,5 @@ class RegressionAnalysis(_Base):
         plt.axis('off')
         self.save_figure('regression')
 
-    # def map_significant_coefficients(self):
-
     def get_results(self):
         return self._results

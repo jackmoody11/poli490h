@@ -25,5 +25,18 @@ class RaceAnalysis(_Base):
         ax.get_figure().suptitle('')
         ax.set_xlabel('Race')
         ax.set_ylabel(self.get_punishment_name())
-        plt.title("{0} Punishment by Race: {1}".format(self.sentence_type, self.drug))
+        plt.title("{0} Punishment by Race: {1}".format(
+            self.sentence_type, self.drug))
         self.save_figure('race_v_punishment')
+
+    def plot_race_v_punishment_no_outliers(self):
+        ax = self.df[['Defendant_Race', self.harshness_measure]
+                     ].boxplot(grid=False, by='Defendant_Race', showfliers=False)
+        ax.set_title('')
+        plt.xticks(rotation=90)
+        ax.get_figure().suptitle('')
+        ax.set_xlabel('Race')
+        ax.set_ylabel(self.get_punishment_name())
+        plt.title("{0} Punishment by Race: {1} (No Outliers)".format(
+            self.sentence_type, self.drug))
+        self.save_figure('race_v_punishment_no_outliers')
