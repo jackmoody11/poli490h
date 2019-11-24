@@ -9,7 +9,6 @@ class RaceAnalysis(_Base):
         self.__methods__ = [self.plot_race, self.plot_race_v_punishment]
 
     def plot_race(self):
-        plt.figure()
         ax = self.df[['Defendant_Race', 'File_Number_Sequence']
                      ].drop_duplicates()['Defendant_Race'].value_counts().plot.bar()
         ax.set_title('Charges by Race: {0}'.format(self.drug))
