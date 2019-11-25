@@ -9,7 +9,8 @@ class AgeAnalysis(_Base):
         self.__methods__ = [self.plot_age,
                             self.plot_offenses_v_age,
                             self.plot_age_v_punishment,
-                            self.plot_age_v_punishment_regression]
+                            self.plot_age_v_punishment_regression,
+                            self.plot_age_v_punishment_quadratic_regression]
 
     def plot_age(self):
         plt.figure()
@@ -54,3 +55,16 @@ class AgeAnalysis(_Base):
         ax.set_title('Age vs. Punishment: {0} {1} Punishment'.format(
             self.drug, self.sentence_type))
         self.save_figure('age_v_punishment_regression')
+
+    def plot_age_v_punishment_quadratic_regression(self):
+        independent = 'Age'
+        dependent = self.harshness_measure
+        series = self.df[[independent, dependent]].groupby(
+            independent)[dependent].mean()
+        ax = sns.regplot(x=series.index.values,
+                         y=series.values, order=2)
+        ax.set_xlabel('Age')
+        ax.set_ylabel(self.get_punishment_name())
+        ax.set_title('Age vs. Punishment: {0} {1} Punishment'.format(
+            self.drug, self.sentence_type))
+        self.save_figure('age_v_punishment_quadratic_regression')

@@ -53,6 +53,7 @@ if __name__ == '__main__':
         'RS': 'Responsible'
     }
     df['Verdict_Code'] = df.loc[:, 'Verdict_Code'].map(verdict_codes)
+    df['Verdict_Code'] = df[df['Verdict_Code'] != 'Not Guilty']['Verdict_Code']
     df['Defendant_Sex_Code'] = df['Defendant_Sex_Code'].map({
         'M': 'Male',
         'F': 'Female',
@@ -77,8 +78,8 @@ if __name__ == '__main__':
     df['Probation_in_Days'] = df['Probation_Frame'] * df['Probation_Length']
 
     # Code min and max sentences to days
-    # NOTE: This may need to be changed, as some of the day conversions cannot actually
-    # be represented with numbers
+    # NOTE: Drops life sentences, as we are only interested in less serious drug crimes (want to try to exclude those
+    # which include some sort of homicide or more serious felony)
     df['Minimum_Sentence_Length_in_Days'] = df['Minimum_Sentence_Length'].astype(float) * \
         df['Minimum_Sentence_Frame'].map({
             'D': 1.0,
@@ -89,6 +90,8 @@ if __name__ == '__main__':
             'P': 5_000.0,
             'F': 0.0
         })
+    df['Minimum_Sentence_Length_in_Days'] = df[df['Minimum_Sentence_Length_in_Days']
+                                               < 5000]['Minimum_Sentence_Length_in_Days']
     df['Maximum_Sentence_Length_in_Days'] = df['Maximum_Sentence_Length'].astype(float) * df['Maximum_Sentence_Frame'].map({
         'D': 1.0,
         'M': 30.0,

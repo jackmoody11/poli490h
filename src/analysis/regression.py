@@ -14,15 +14,21 @@ class RegressionAnalysis(_Base):
         else:
             _df = self.df[(self.df['Active_Sentence_Indicator']
                            == self.sentence_type)]
-        self._results = linear_regression(_df, self.harshness_measure, ['Age'],
-                                          'Defendant_Race', 'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code')
+        try:
+            self._results = linear_regression(_df, self.harshness_measure, ['Age', 'Structured_Sentence_Prior_Record_Points'],
+                                              'Defendant_Race', 'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code')
+        except ValueError:
+            pass
         self.__methods__ = [self.print_regression]
 
     def print_regression(self):
-        plt.text(0.01, 0.05, str(self._results.summary2()), {
-            'fontsize': 10}, fontproperties='monospace')
-        plt.axis('off')
-        self.save_figure('regression')
+        try:
+            plt.text(0.01, 0.05, str(self._results.summary2()), {
+                'fontsize': 10}, fontproperties='monospace')
+            plt.axis('off')
+            self.save_figure('regression')
+        except (ValueError, AttributeError):
+            pass
 
     def get_results(self):
         return self._results

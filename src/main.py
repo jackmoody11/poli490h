@@ -42,4 +42,5 @@ if __name__ == '__main__':
     for drug_name, df in tqdm({'Marijuana': marijuana, 'Cocaine': cocaine, 'Heroin': heroin}.items()):
         for sentence_type in ('Active', 'Intermediate', 'Community'):
             _df = df[df['Active_Sentence_Indicator'] == sentence_type]
-            create_figures(_df, drug_name, sentence_type)
+            if len(_df) > 0:
+                create_figures(_df, drug_name, sentence_type)

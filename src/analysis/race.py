@@ -6,7 +6,9 @@ from analysis.base import _Base
 class RaceAnalysis(_Base):
     def __init__(self, df, drug_name, sentence_type):
         super().__init__(df, drug_name, sentence_type)
-        self.__methods__ = [self.plot_race, self.plot_race_v_punishment]
+        self.__methods__ = [self.plot_race,
+                            self.plot_race_v_punishment,
+                            self.plot_race_v_punishment_no_outliers]
 
     def plot_race(self):
         ax = self.df[['Defendant_Race', 'File_Number_Sequence']
