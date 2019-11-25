@@ -23,7 +23,7 @@ def get_significant_coefficients(results, drug_name, sentence_type):
         'coef', 'P>|t|']].rename({'coef': coef_header, 'P>|t|': p_value_header}, axis=1)
     series.drop_duplicates(inplace=True)
     # Only take values that were statistically significant so that
-    return series[series[p_value_header] <= 0.05][coef_header]
+    return series[series[p_value_header] <= 0.025][coef_header]
 
 
 def get_dummies(df, *dummies):

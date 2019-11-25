@@ -6,6 +6,7 @@ from analysis.plea import PleaAnalysis
 from analysis.race import RaceAnalysis
 from analysis.general import GeneralAnalysis
 from analysis.regression import RegressionAnalysis
+from analysis.prior import PriorPointsAnalysis
 
 
 def create_figures(df, drug_name, sentence_type):
@@ -14,7 +15,8 @@ def create_figures(df, drug_name, sentence_type):
     analyses = [AgeAnalysis(*args), AttorneyAnalysis(*args),
                 CountyAnalysis(*args), GenderAnalysis(*args),
                 PleaAnalysis(*args), RaceAnalysis(*args),
-                GeneralAnalysis(*args), RegressionAnalysis(*args)]
+                GeneralAnalysis(*args), RegressionAnalysis(*args),
+                PriorPointsAnalysis(*args)]
 
     for analysis in analyses:
         analysis.run()
