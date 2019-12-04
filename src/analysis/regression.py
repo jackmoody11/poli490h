@@ -17,16 +17,40 @@ class RegressionAnalysis(_Base):
         try:
             self._results = linear_regression(_df, self.harshness_measure, ['Age', 'Structured_Sentence_Prior_Record_Points'],
                                               'Defendant_Race', 'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code')
+            self._results_no_priors = linear_regression(_df, self.harshness_measure, ['Age'],
+                                                        'Defendant_Race', 'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code')
+            self._results_offense_codes = linear_regression(_df, self.harshness_measure, ['Age'],
+                                                            'Defendant_Race', 'County', 'Plea_Code', 'District_Court_Attorney_Type', 'Defendant_Sex_Code', 'Charged_Offense_Code')
         except ValueError:
             pass
-        self.__methods__ = [self.print_regression]
+        self.__methods__ = [self.print_regression,
+                            self.print_regression_no_priors,
+                            self.print_regression_control_offense_code]
 
     def print_regression(self):
         try:
             plt.text(0.01, 0.05, str(self._results.summary2()), {
-                'fontsize': 10}, fontproperties='monospace')
+                     'fontsize': 10}, fontproperties='monospace')
             plt.axis('off')
             self.save_figure('regression')
+        except (ValueError, AttributeError):
+            pass
+
+    def print_regression_no_priors(self):
+        try:
+            plt.text(0.01, 0.05, str(self._results_no_priors.summary2()), {
+                'fontsize': 10}, fontproperties='monospace')
+            plt.axis('off')
+            self.save_figure('regression_no_priors')
+        except (ValueError, AttributeError):
+            pass
+
+    def print_regression_control_offense_code(self):
+        try:
+            plt.text(0.01, 0.05, str(self._results_offense_codes.summary2()), {
+                'fontsize': 10}, fontproperties='monospace')
+            plt.axis('off')
+            self.save_figure('regression_control_offense_codes')
         except (ValueError, AttributeError):
             pass
 

@@ -13,7 +13,8 @@ class RaceAnalysis(_Base):
     def plot_race(self):
         ax = self.df[['Defendant_Race', 'File_Number_Sequence']
                      ].drop_duplicates()['Defendant_Race'].value_counts().plot.bar()
-        ax.set_title('Charges by Race: {0}'.format(self.drug))
+        ax.set_title('Charges by Race: {0} Punishment, {1}'.format(
+            self.sentence_type, self.drug))
         ax.set_ylabel('Count')
         ax.get_yaxis().set_major_formatter(
             matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))

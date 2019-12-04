@@ -16,7 +16,8 @@ class AgeAnalysis(_Base):
         plt.figure()
         ax = self.df[['Age', 'File_Number_Sequence']].drop_duplicates()[
             'Age'].hist()
-        ax.set_title('Age Distribution: {0}'.format(self.drug))
+        ax.set_title('Age Distribution: {0} Punishment, {1}'.format(
+            self.sentence_type, self.drug))
         ax.set_ylabel('Count')
         ax.set_xlabel('Age (Years)')
         ax.grid(False)
@@ -44,7 +45,6 @@ class AgeAnalysis(_Base):
         self.save_figure('age_v_punishment')
 
     def plot_age_v_punishment_regression(self):
-        # TODO: Finish this
         independent = 'Age'
         dependent = self.harshness_measure
         series = self.df[[independent, dependent]].groupby(
